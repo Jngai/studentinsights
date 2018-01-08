@@ -1,6 +1,13 @@
 import _ from 'lodash';
+import MathDetails from '../student_profile/MathDetails.js';
+import ElaDetails from '../student_profile/ElaDetails.js';
 import PropTypes from '../helpers/prop_types.jsx';
 import {merge} from '../helpers/react_helpers.jsx';
+import NotesDetails from '../student_profile/NotesDetails.js';
+import React from 'react';
+import Scales from '../student_profile/Scales.js';
+import SummaryList from '../student_profile/SummaryList.js';
+import AttendanceDetails from '../student_profile/AttendanceDetails.js';
 
 (function() {
   window.shared || (window.shared = {});
@@ -9,18 +16,11 @@ import {merge} from '../helpers/react_helpers.jsx';
   const Sparkline = window.shared.Sparkline;
   const AcademicSummary = window.shared.AcademicSummary;
   const SummaryWithoutSparkline = window.shared.SummaryWithoutSparkline;
-  const SummaryList = window.shared.SummaryList;
   const QuadConverter = window.shared.QuadConverter;
-  const Scales = window.shared.Scales;
 
   const StudentProfileHeader = window.shared.StudentProfileHeader;
   const ProfileDetails = window.shared.ProfileDetails;
-  const ELADetails = window.shared.ELADetails;
-  const MathDetails = window.shared.MathDetails;
-  const AttendanceDetails = window.shared.AttendanceDetails;
   const ServicesDetails = window.shared.ServicesDetails;
-  const NotesDetails = window.shared.NotesDetails;
-
 
   // define page component
   const styles = {
@@ -257,7 +257,7 @@ import {merge} from '../helpers/react_helpers.jsx';
             serviceTypesIndex={this.props.serviceTypesIndex}
             currentEducator={this.props.currentEducator}/>
       );
-      case 'ela': return <ELADetails chartData={this.props.chartData} student={this.props.student} />;
+      case 'ela': return <ElaDetails chartData={this.props.chartData} student={this.props.student} />;
       case 'math': return <MathDetails chartData={this.props.chartData} student={this.props.student} />;
       case 'attendance':
         return (
@@ -364,8 +364,6 @@ import {merge} from '../helpers/react_helpers.jsx';
       return (
         <SummaryList title="Demographics" elements={demographicsElements} />
       );
-
-
     },
 
     renderSections: function(sections) {

@@ -1,16 +1,14 @@
 import _ from 'lodash';
+import Datepicker from '../student_profile/Datepicker.js';
+import {merge} from '../helpers/react_helpers.jsx';
 import moment from 'moment';
 import ProfileDetailsStyle from '../helpers/profile_details_style.jsx';
-import {merge} from '../helpers/react_helpers.jsx';
 
 (function() {
   window.shared || (window.shared = {});
   const QuadConverter = window.shared.QuadConverter;
   const styles = ProfileDetailsStyle;
   const StudentSectionsRoster = window.shared.StudentSectionsRoster;
-  const Datepicker = window.shared.Datepicker;
-  const filterFromDate = QuadConverter.firstDayOfSchool(QuadConverter.toSchoolYear(moment())-1);
-  const filterToDate = moment();
 
   window.shared.ProfileDetails = React.createClass({
     displayName: 'ProfileDetails',
@@ -170,21 +168,41 @@ import {merge} from '../helpers/react_helpers.jsx';
       return _.sortBy(events, 'date').reverse();
     },
 
+    filterFromDateForQuery: function() {
+      const {filterFromDate} = this.state;
+
+      return filterFromDate.format('MM/DD/YYYY');
+    },
+
+    filterToDateForQuery: function() {
+      const {filterToDate} = this.state;
+
+      return filterToDate.format('MM/DD/YYYY');
+    },
+
+    studentReportURL: function() {
+      const id = this.props.student.id;
+      const filterFromDateForQuery = this.filterFromDateForQuery();
+      const filterToDateForQuery = this.filterToDateForQuery();
+      const sections = $('#section:checked').map(function() {return this.value;}).get().join(',');
+
+      return `${id}/student_report.pdf?sections=${sections}&from_date=${filterFromDateForQuery}&to_date=${filterToDateForQuery}`;
+    },
+
     onFilterFromDateChanged: function(dateText) {
       const textMoment = moment.utc(dateText, 'MM/DD/YYYY');
       const updatedMoment = (textMoment.isValid()) ? textMoment : null;
-      this.filterFromDate = updatedMoment;
+      this.setState({ filterFromDate: updatedMoment });
     },
 
     onFilterToDateChanged: function(dateText) {
       const textMoment = moment.utc(dateText, 'MM/DD/YYYY');
       const updatedMoment = (textMoment.isValid()) ? textMoment : null;
-      this.filterToDate = updatedMoment;
+      this.setState({ filterToDate: updatedMoment });
     },
 
     onClickGenerateStudentReport: function(event) {
-      const sections = $('#section:checked').map(function() {return this.value;}).get().join(',');
-      window.location = this.props.student.id + '/student_report.pdf?sections=' + sections + '&from_date=' + filterFromDate.format('MM/DD/YYYY') + '&to_date=' + filterToDate.format('MM/DD/YYYY');
+      window.location = this.studentReportURL();
       return null;
     },
 
@@ -319,7 +337,7 @@ import {merge} from '../helpers/react_helpers.jsx';
               <label>From date:</label>
               <Datepicker
                 styles={{ input: styles.datepickerInput }}
-                value={filterFromDate.format('MM/DD/YYYY')}
+                value={this.state.filterFromDate.format('MM/DD/YYYY')}
                 onChange={this.onFilterFromDateChanged}
                 datepickerOptions={{
                   showOn: 'both',
@@ -331,7 +349,7 @@ import {merge} from '../helpers/react_helpers.jsx';
               <label>To date:</label>
               <Datepicker
                 styles={{ input: styles.datepickerInput }}
-                value={filterToDate.format('MM/DD/YYYY')}
+                value={this.state.filterToDate.format('MM/DD/YYYY')}
                 onChange={this.onFilterToDateChanged}
                 datepickerOptions={{
                   showOn: 'both',

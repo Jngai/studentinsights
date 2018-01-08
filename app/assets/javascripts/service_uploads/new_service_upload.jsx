@@ -1,7 +1,8 @@
+import Datepicker from '../student_profile/Datepicker.js';
+import ServiceTypeDropdown from './ServiceTypeDropdown.js';
+
 (function() {
   window.shared || (window.shared = {});
-  const Datepicker = window.shared.Datepicker;
-  const ServiceTypeDropdown = window.shared.ServiceTypeDropdown;
 
   window.shared.NewServiceUpload = React.createClass({
 
